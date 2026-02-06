@@ -1,6 +1,7 @@
 /* App.css */
 
 /* General Body and App Styles */
+
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -380,7 +381,7 @@ body {
 
 /* Footer Enhancements */
 .footer {
-  background: #08294d;
+  background: #011020;
   color: white;
   text-align: center;
   padding: 1.5rem;
@@ -492,4 +493,157 @@ body {
   opacity: 0.8;
   filter: grayscale(50%);
   box-shadow: 0 2px 10px rgba(244, 67, 54, 0.2);
+}
+/* Parallax Base */
+.parallax {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  padding: 120px 30px;
+  text-align: center;
+  position: relative;
+  margin-top: 0;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Overlay */
+.parallax::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.60);
+  backdrop-filter: blur(3px);
+}
+
+/* Text fade-up animation */
+.parallax .content {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+/* Title + spacing */
+.title {
+  font-size: 46px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 20px;
+  opacity: 0.9;
+  margin-bottom: 40px;
+}
+
+/* Background Images */
+.how-it-works {
+  background:#04182e;
+}
+
+.reviews {
+  background-image: url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1200&auto=format");
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  flex-wrap: wrap;
+}
+
+.step {
+  background: rgba(134, 98, 98, 0.12);
+  padding: 25px 28px;
+  width: 160px;
+  border-radius: 18px;
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step img {
+  width: 55px;
+  margin-bottom: 12px;
+}
+
+.step span {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.step:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Reviews */
+.review-box {
+ background:#000d19;
+  margin: 25px auto;
+  padding: 25px;
+  border-radius: 14px;
+  max-width: 550px;
+  backdrop-filter: blur(30px); /* reduced blur */
+  border: 1px solid rgba(255, 255, 255, 0.12); /* subtle border */
+  font-size: 18px;
+  line-height: 1.6;
+  transition: transform 0.3s ease;
+  color: white; /* ensure text is readable */
+}
+
+
+.review-box:hover {
+  transform: scale(1.03);
+}
+
+.review-box span {
+  display: block;
+  margin-top: 10px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* ===== Admin Dashboard Layout ===== */
+.admin-container {
+  background: linear-gradient(135deg, #0f172a, #020617);
+  min-height: 100vh;
+  padding: 40px;
+  color: white;
+}
+
+.admin-title {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+.admin-card {
+  background: #020617;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  background: #1e293b;
+  padding: 12px;
+}
+
+.admin-table td {
+  padding: 12px;
+  border-bottom: 1px solid #334155;
 }

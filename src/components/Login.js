@@ -5,6 +5,7 @@ const Login = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+const [role, setRole] = useState("USER");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,14 +17,19 @@ const Login = ({ setIsLoggedIn }) => {
   body: JSON.stringify({ username, password }),
 });
 
-
       const data = await res.json();
 
-      if (res.ok) {
-        // Save token in localStorage
-        localStorage.setItem("token", data.token);
-        setIsLoggedIn(true);
-        navigate("/"); // Redirect to home
+    if (res.ok) {
+  localStorage.setItem("token", data.token);
+  setIsLoggedIn(true);
+
+  if (data.role === "ADMIN") {
+    navigate("/admin1");
+  } else {
+    navigate("/");
+  }
+
+
       } else {
         alert(data.message || "Invalid login");
       }
@@ -57,6 +63,17 @@ const Login = ({ setIsLoggedIn }) => {
               required
             />
           </div>
+           {/* <div className="input-group">
+  <label>Login as</label>
+  <select
+    value={role}
+    onChange={(e) => setRole(e.target.value)}
+    required
+  >
+    <option value="USER">User</option>
+    <option value="ADMIN">Admin</option>
+  </select>
+</div> */}
 
           <button type="submit" className="btn-primary">Login</button>
         </form>

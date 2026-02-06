@@ -6,6 +6,8 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  
+const [role, setRole] = useState("USER");
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ const Register = () => {
       const res = await fetch("http://localhost:5000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password ,email}),
+        body: JSON.stringify({ username, password ,email,role }),
       });
 
       const data = await res.json();
@@ -65,6 +67,18 @@ const Register = () => {
               required
             />
           </div>
+          <div className="input-group">
+  <label>Register as</label>
+  <select
+    value={role}
+    onChange={(e) => setRole(e.target.value)}
+    required
+  >
+    <option value="USER">User</option>
+    <option value="ADMIN">Admin</option>
+  </select>
+</div>
+
 
           <button type="submit" className="btn-primary">Sign Up</button>
         </form>

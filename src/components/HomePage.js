@@ -131,64 +131,50 @@ function HomePage({ isLoggedIn, setIsLoggedIn }) {
         </div>
       )}
 
-      <section className="section how-it-works">
-        <h3>How It Works</h3>
-        <div className="grid">
-          <div className="card">
-            <FaMapMarkerAlt className="icon green" />
-            <h4>Find Your Spot</h4>
-            <p>Easily locate available parking spaces in your area using our live map.</p>
-          </div>
-          <div className="card">
-            <FaCreditCard className="icon green" />
-            <h4>Book Securely</h4>
-            <p>Reserve your spot instantly with our secure, in-app payment system.</p>
-          </div>
-          <div className="card">
-            <FaCheckCircle className="icon green" />
-            <h4>Park with Ease</h4>
-            <p>Navigate to your reserved spot and park with a quick scan or code.</p>
-          </div>
-        </div>
-      </section>
+   
+<section class="parallax how-it-works">
+  <div class="content">
+    <h2 class="title">How Our Smart Parking Works</h2>
+    <p class="subtitle">A simple, fast and reliable way to book parking effortlessly</p>
 
-      {/* <section className="section light">
-        <h3>Benefits</h3>
-        <div className="grid">
-          {[
-            { icon: <FaClock />, text: "Save Time" },
-            { icon: <FaSearch />, text: "Real-Time Updates" },
-            { icon: <FaCreditCard />, text: "Secure Payments" },
-            { icon: <FaCheckCircle />, text: "24/7 Availability" },
-          ].map((b, i) => (
-            <div key={i} className="card">
-              <div className="icon green">{b.icon}</div>
-              <p>{b.text}</p>
-            </div>
-          ))}
-        </div>
-      </section> */}
+    <div class="steps">
+      <div class="step">
+        <img src="/images/search.jpg"/>
+        <span>Search Area</span>
+      </div>
+      <div class="step">
+        <img src="/images/s.jpg" />
+        <span>Select Slot</span>
+      </div>
+      <div class="step">
+        <img src="/images/p.jpg" />
+        <span>Pay & Park</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <section className="section" id="reviews">
-        <h3>User Reviews</h3>
-        <div className="grid">
-          {[
-            { name: "Rahul Kumar", rating: 3, review: "Super easy to book!" },
-            { name: "Sarah Johnson", rating: 4, review: "Very convenient and affordable." },
-            { name: "Vishal Lalotra", rating: 5, review: "Loved the real-time updates!" },
-          ].map((r, i) => (
-            <div key={i} className="card">
-              <h4>{r.name}</h4>
-              <div className="stars">
-                {[...Array(r.rating)].map((_, idx) => (
-                  <FaStar key={idx} />
-                ))}
-              </div>
-              <p>{r.review}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+
+<section class="parallax reviews">
+  <div class="content">
+    <h2 class="title">What Our Users Say</h2>
+
+    <div class="review-box">
+      <p>"The easiest parking app I’ve ever used. Beautiful UI!"</p>
+      <span>- Aakash</span>
+    </div>
+
+    <div class="review-box">
+      <p>"Super smooth booking. The map feature is perfect!"</p>
+      <span>- Priya</span>
+    </div>
+
+    <div class="review-box">
+      <p>"Accurate, fast and modern experience. Love it."</p>
+      <span>- Rohan</span>
+    </div>
+  </div>
+</section>
 
       <footer className="footer">
         <p>© 2025 SmartPark. All rights reserved.</p>

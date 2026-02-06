@@ -9,6 +9,10 @@ import BookingPage from "./components/BookingPage.js";
 import Contact from "./components/Contact.js";
 import About from "./components/About.js";
 import PricingPage from "./components/PricingPage.js";
+import PaymentSuccess from './components/PaymentSuccess.js';
+import AdminPayments from './components/AdminPayments.js';
+import SlotMap from './components/SlotMap.jsx';
+import AdminDashboard from './components/AdminDashboard.js';
 
 export default function App() {
   
@@ -29,6 +33,11 @@ export default function App() {
      <Route path="/about" element={<About />} />
       <Route path="/register" element={<Register />} />
      <Route path="/pricing" element={<PricingPage />} />
+     <Route path="/payment" element={<PaymentSuccess />} />
+     <Route path="/admin" element={<AdminPayments />} />
+       <Route path="/map" element={<SlotMap />} />
+       <Route path="/admin1" element={<AdminDashboard />} />
+     
            
     </Routes>
   );
