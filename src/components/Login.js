@@ -63,17 +63,7 @@ const [role, setRole] = useState("USER");
               required
             />
           </div>
-           {/* <div className="input-group">
-  <label>Login as</label>
-  <select
-    value={role}
-    onChange={(e) => setRole(e.target.value)}
-    required
-  >
-    <option value="USER">User</option>
-    <option value="ADMIN">Admin</option>
-  </select>
-</div> */}
+           
 
           <button type="submit" className="btn-primary">Login</button>
         </form>

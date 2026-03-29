@@ -16,13 +16,13 @@ const [role, setRole] = useState("USER");
       const res = await fetch("http://localhost:5000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password ,email,role }),
+        body: JSON.stringify({ username,password,email,role }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        alert("Registration successful! Please log in.");
+        alert(data.message ||"Registration successful! Please log in.");
         navigate("/login");
       } else {
         alert(data.message || "Error registering user");

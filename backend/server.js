@@ -88,7 +88,7 @@ async function initDB() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        username VARCHAR(100) UNIQUE NOT NULL,
+        username VARCHAR(100) NOT NULL,
         email VARCHAR(150) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(20) DEFAULT 'USER'
@@ -143,10 +143,10 @@ app.post("/register", async (req, res) => {
 
   try {
     const userExists = await pool.query(
-      "SELECT * FROM users WHERE username=$1 OR email=$2",
-      [username, email]
+      "SELECT * FROM users WHERE email=$1",
+      [email]
     );
-    if (userExists.rows.length)
+    if (userExists.rows.length>0)
       return res.status(400).json({ message: "User exists" });
 
     const hashed = await bcrypt.hash(password, 10);
@@ -156,7 +156,7 @@ app.post("/register", async (req, res) => {
       [username, email, hashed, role]
     );
 
-    res.json({ message: "User registered" });
+    res.status(201).json({ message: "User registered" });
   } catch (err) {
     console.error("register error:", err);
     res.status(500).json({ error: "server error" });
@@ -300,35 +300,35 @@ app.post("/verify-payment", async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1] || null;
     const { orderId, paymentId, signature } = req.body;
 
-    // 1️⃣ Verify signature
+    //  Verify signature
     const generatedSignature = crypto
       .createHmac("sha256", RAZORPAY_KEY_SECRET)
       .update(orderId + "|" + paymentId)
       .digest("hex");
 
     if (generatedSignature !== signature) {
-      console.log("❌ SIGNATURE MISMATCH");
+      console.log(" SIGNATURE MISMATCH");
       return res
         .status(400)
         .json({ success: false, error: "Verification failed" });
     }
 
-    console.log("✅ SIGNATURE MATCHED");
+    console.log(" SIGNATURE MATCHED");
 
-    // 2️⃣ Mark payment as PAID
+    //  Mark payment as PAID
     await pool.query(
       "UPDATE payments SET payment_id=$1, signature=$2, status=$3 WHERE order_id=$4",
       [paymentId, signature, "PAID", orderId]
     );
 
-    // 3️⃣ Fetch payment row
+    //  Fetch payment row
     const pRes = await pool.query(
       "SELECT * FROM payments WHERE order_id=$1 LIMIT 1",
       [orderId]
     );
     const paymentRow = pRes.rows[0];
 
-    // 4️⃣ Decode logged-in user
+    //  Decode logged-in user
     let userId = null, username = null, email = null;
     if (token) {
       const decoded = jwt.verify(token, "secretkey");
@@ -337,14 +337,14 @@ app.post("/verify-payment", async (req, res) => {
       email = decoded.email;
     }
 
-    // 5️⃣ Attach user info
+   
     if (userId) {
       await pool.query(
         "UPDATE payments SET user_id=$1, user_name=$2, email=$3 WHERE order_id=$4",
         [userId, username, email, orderId]
       );
     }
-    // 6️⃣ BOOK SLOT (THIS IS THE FIX)
+    //  BOOK SLOT (THIS IS THE FIX)
 if (paymentRow.slot_id) {
   const sRes = await pool.query(
     "SELECT * FROM slots WHERE id=$1",
@@ -374,8 +374,7 @@ if (paymentRow.slot_id) {
   }
 }
 
-    // 6️⃣ 📧 SEND EMAIL (THIS WAS MISSING)
-    // 6️⃣ 📧 SEND EMAIL (DO NOT FAIL PAYMENT IF EMAIL FAILS)
+   
 if (email) {
   try {
     console.log("📧 Sending email to:", email);
@@ -393,12 +392,11 @@ if (email) {
 
     console.log("✅ Email sent");
   } catch (mailErr) {
-    console.error("❌ Email failed, but payment is SUCCESS:", mailErr.message);
+    console.error("Email failed, but payment is SUCCESS:", mailErr.message);
   }
 }
 
 
-    // 7️⃣ Respond success
     res.json({ success: true });
 
   } catch (err) {
