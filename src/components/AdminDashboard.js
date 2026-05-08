@@ -56,6 +56,41 @@ const AdminDashboard = () => {
       "_blank"
     );
   };
+  const unbookSlot = async (slotId) => {
+  try {
+
+    const res = await fetch(
+      `http://localhost:5000/admin/unbook-slot/${slotId}`,
+      {
+        method: "PUT",
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Slot released");
+
+      // refresh table
+      setPayments((prev) =>
+        prev.map((p) =>
+          p.slot_id === slotId
+            ? { ...p, status: "RELEASED" ,
+              slot_number: "AVAILABLE"
+            }
+            : p
+        )
+      );
+
+    } else {
+      alert("Failed");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Error");
+  }
+};
 
   return (
     <div className="admin-container">
@@ -79,6 +114,7 @@ const AdminDashboard = () => {
                 <th>Status</th>
                 <th>Date</th>
                 <th>Receipt</th> {/* ✅ NEW */}
+              <th>Actions</th>
               </tr>
             </thead>
 
@@ -128,6 +164,25 @@ const AdminDashboard = () => {
                       "-"
                     )}
                   </td>
+                  <td>
+  {p.status === "PAID" ? (
+    <button
+      onClick={() => unbookSlot(p.slot_id)}
+      style={{
+        padding: "6px 10px",
+        background: "red",
+        color: "#fff",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      Free Slot
+    </button>
+  ) : (
+    "-"
+  )}
+</td>
                 </tr>
               ))}
             </tbody>

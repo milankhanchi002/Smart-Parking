@@ -6,6 +6,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import pkg from "pg";
+import cron from "node-cron";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Razorpay from "razorpay";
@@ -29,8 +30,8 @@ const pool = new Pool({
 });
 // const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
 
-const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_Ri4HPnlUXr1sEZ";
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "xvTh04npgHPeCCTQW0NXlnsc";
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_SmRBGJClRZk6jk";
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "4yCJj3p1KgWexdoXevO5KDcB";
 // const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 
 
@@ -299,7 +300,9 @@ app.post("/verify-payment", async (req, res) => {
 
     const token = req.headers.authorization?.split(" ")[1] || null;
     const { orderId, paymentId, signature } = req.body;
-
+console.log(orderId);
+console.log(paymentId);
+console.log(signature);
     //  Verify signature
     const generatedSignature = crypto
       .createHmac("sha256", RAZORPAY_KEY_SECRET)
@@ -312,8 +315,6 @@ app.post("/verify-payment", async (req, res) => {
         .status(400)
         .json({ success: false, error: "Verification failed" });
     }
-
-    console.log(" SIGNATURE MATCHED");
 
     //  Mark payment as PAID
     await pool.query(
@@ -355,15 +356,16 @@ if (paymentRow.slot_id) {
     const slot = sRes.rows[0];
 
     if (!slot.is_booked) {
-      await pool.query(
-        `UPDATE slots
-         SET is_booked = true,
-             booked_by = $1,
-             booked_by_username = $2,
-             parking_hours = $3
-         WHERE id = $4`,
-        [userId, username, paymentRow.hours, paymentRow.slot_id]
-      );
+     await pool.query(
+  `UPDATE slots
+   SET is_booked = true,
+       booked_by = $1,
+       booked_by_username = $2,
+       parking_hours = $3,
+       booking_end = NOW() + (($3::int) * INTERVAL '1 hour')
+   WHERE id = $4`,
+  [userId, username, paymentRow.hours, paymentRow.slot_id]
+);
     }
 
     // also store slot_number in payments table
@@ -373,7 +375,10 @@ if (paymentRow.slot_id) {
     );
   }
 }
-
+console.log("ORDER:", orderId);
+console.log("PAYMENT:", paymentId);
+console.log("SIGNATURE:", signature);
+console.log("GENERATED:", generatedSignature);
    
 if (email) {
   try {
@@ -405,6 +410,71 @@ if (email) {
   }
 });
 
+app.put("/admin/unbook-slot/:id", async (req, res) => {
+  try {
+
+    const slotId = req.params.id;
+
+    await pool.query(
+      `UPDATE slots
+       SET is_booked = false,
+           booked_by = NULL,
+           booked_by_username = NULL,
+           parking_hours = NULL,
+           booking_end = NULL
+       WHERE id = $1`,
+      [slotId]
+    );
+
+    await pool.query(
+      `UPDATE payments
+       SET status = 'RELEASED'
+       WHERE slot_id = $1
+       AND status = 'PAID'`,
+      [slotId]
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false
+    });
+  }
+});
+cron.schedule("* * * * *", async () => {
+  try {
+
+    await pool.query(`
+      UPDATE slots
+      SET is_booked = false,
+          booked_by = NULL,
+          booked_by_username = NULL,
+          parking_hours = NULL,
+          booking_end = NULL
+      WHERE booking_end IS NOT NULL
+      AND booking_end <= NOW()
+    `);
+await pool.query(`
+  UPDATE payments
+  SET status = 'RELEASED'
+  WHERE status = 'PAID'
+  AND slot_id IN (
+    SELECT id FROM slots
+    WHERE booking_end IS NOT NULL
+    AND booking_end <= NOW()
+  )
+`);
+    console.log("Checked expired slots");
+
+  } catch (err) {
+    console.error("Cron error:", err);
+  }
+});
 
 
 /* ===================== START ===================== */

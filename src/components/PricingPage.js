@@ -30,7 +30,7 @@ export default function PricingPage() {
       const order = createJson.order;
 
       const options = {
-        key: "rzp_test_Ri4HPnlUXr1sEZ",
+        key: "rzp_test_SmRBGJClRZk6jk",
         amount: order.amount,
         currency: order.currency || "INR",
         name: "QuickPark",
