@@ -12,22 +12,29 @@ import jwt from "jsonwebtoken";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import PDFDocument from "pdfkit";
-import nodemailer from "nodemailer";
+import { sendPaymentEmail } from "./utils/email.js";
 
 const { Pool } = pkg;
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
 app.use(bodyParser.json());
 
-const pool = new Pool({
-  user: process.env.PG_USER || "postgres",
-  host: process.env.PG_HOST || "localhost",
-  database: process.env.PG_DATABASE || "quickpark",
-  password: process.env.PG_PASSWORD || "navreet20041",
-  port: process.env.PG_PORT || 5432,
-});
+const poolConfig = process.env.DATABASE_URL
+  ? { connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
+  : {
+      user: process.env.PG_USER || "postgres",
+      host: process.env.PG_HOST || "localhost",
+      database: process.env.PG_DATABASE || "quickpark",
+      password: process.env.PG_PASSWORD || "navreet20041",
+      port: process.env.PG_PORT || 5432,
+    };
+const pool = new Pool(poolConfig);
 // const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
 
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_SmRBGJClRZk6jk";
@@ -40,47 +47,8 @@ const razorpay = new Razorpay({
   key_secret: RAZORPAY_KEY_SECRET,
 });
 
-/* ===================== NEW: EMAIL SETUP ===================== */
-const emailTransporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Gmail App Password
-  },
-});
-
-async function sendPaymentEmail({
-  to,
-  username,
-  city,
-  slotNumber,
-  hours,
-  amount,
-  orderId,
-  paymentId,
-}) {
-  const message = `
-Hello ${username || "User"},
-
-✅ Your parking payment was successful!
-
-City: ${city}
-Slot Number: ${slotNumber}
-Hours: ${hours}
-Amount Paid: ₹${amount}
-Order ID: ${orderId}
-Payment ID: ${paymentId}
-
-Thank you for using QuickPark 🚗
-`;
-
-  await emailTransporter.sendMail({
-    from: `"QuickPark" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: "Payment Successful - QuickPark",
-    text: message,
-  });
-}
+/* ===================== EMAIL SETUP ===================== */
+// Email logic is now imported from utils/email.js
 /* ===================== END EMAIL SETUP ===================== */
 
 // ---------- DB init ----------
@@ -104,12 +72,16 @@ async function initDB() {
         is_booked BOOLEAN DEFAULT false,
         booked_by INT REFERENCES users(id),
         parking_hours INT,
+        booking_end TIMESTAMP,
         booked_by_username VARCHAR(100),
         lat DOUBLE PRECISION,
         lng DOUBLE PRECISION,
         UNIQUE (slot_number, area)
       );
     `);
+
+    // Add booking_end column if the table was created before this fix
+    await pool.query(`ALTER TABLE slots ADD COLUMN IF NOT EXISTS booking_end TIMESTAMP;`);
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS payments (
@@ -131,6 +103,22 @@ async function initDB() {
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
+    const dummySlotsQuery = `
+      INSERT INTO slots (slot_number, area, is_booked, booked_by, booked_by_username) VALUES
+      (1, 'Delhi', false, null, null), (2, 'Delhi', true, 1, 'user1'), (3, 'Delhi', false, null, null), (4, 'Delhi', true, 1, 'user1'), (5, 'Delhi', false, null, null),
+      (6, 'Delhi', false, null, null), (7, 'Delhi', true, 1, 'user1'), (8, 'Delhi', false, null, null), (9, 'Delhi', true, 1, 'user1'), (10, 'Delhi', false, null, null),
+
+      (1, 'Mumbai', true, 1, 'user1'), (2, 'Mumbai', false, null, null), (3, 'Mumbai', false, null, null), (4, 'Mumbai', false, null, null), (5, 'Mumbai', true, 1, 'user1'),
+      (6, 'Mumbai', false, null, null), (7, 'Mumbai', false, null, null), (8, 'Mumbai', true, 1, 'user1'), (9, 'Mumbai', false, null, null), (10, 'Mumbai', false, null, null),
+
+      (1, 'Bengaluru', false, null, null), (2, 'Bengaluru', true, 1, 'user1'), (3, 'Bengaluru', false, null, null), (4, 'Bengaluru', true, 1, 'user1'), (5, 'Bengaluru', false, null, null),
+      (6, 'Bengaluru', false, null, null), (7, 'Bengaluru', true, 1, 'user1'), (8, 'Bengaluru', false, null, null), (9, 'Bengaluru', true, 1, 'user1'), (10, 'Bengaluru', false, null, null),
+
+      (1, 'Chandigarh', true, 1, 'user1'), (2, 'Chandigarh', false, null, null), (3, 'Chandigarh', true, 1, 'user1'), (4, 'Chandigarh', false, null, null), (5, 'Chandigarh', false, null, null),
+      (6, 'Chandigarh', true, 1, 'user1'), (7, 'Chandigarh', false, null, null), (8, 'Chandigarh', true, 1, 'user1'), (9, 'Chandigarh', false, null, null), (10, 'Chandigarh', false, null, null)
+      ON CONFLICT (slot_number, area) DO NOTHING;
+    `;
+    await pool.query(dummySlotsQuery);
 
     console.log("Database initialized");
   } catch (err) {
@@ -140,6 +128,7 @@ async function initDB() {
 
 /* ===================== REGISTER ===================== */
 app.post("/register", async (req, res) => {
+  console.log("--> Received POST /register request with body:", req.body);
   const { username, email, password, role } = req.body;
 
   try {
@@ -480,5 +469,5 @@ await pool.query(`
 /* ===================== START ===================== */
 app.listen(PORT, async () => {
   await initDB();
-  console.log(`Server listening on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

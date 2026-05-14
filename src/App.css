@@ -647,3 +647,65 @@ body {
   padding: 12px;
   border-bottom: 1px solid #334155;
 }
+
+/* Responsive Design for Mobile Devices */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .navbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .navbar nav a {
+    margin: 0 5px;
+    font-size: 16px;
+  }
+  .navbar-logo {
+    font-size: 2rem;
+  }
+  .main-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  .main-content h2 {
+    font-size: 2rem;
+  }
+  .search-bar {
+    flex-direction: column;
+  }
+  .search-bar input, .react-datepicker-wrapper input, .btn-success {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  .title {
+    font-size: 32px;
+  }
+  .subtitle {
+    font-size: 16px;
+  }
+  .review-box {
+    margin: 15px;
+    padding: 15px;
+  }
+  .admin-container {
+    padding: 15px;
+  }
+  .admin-card {
+    overflow-x: auto;
+  }
+  .login-box {
+    padding: 30px 20px;
+    margin: 15px;
+  }
+}

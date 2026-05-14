@@ -21,7 +21,7 @@ export default function PaymentSuccess() {
 
     // Open PDF in new tab (user can download or print)
     window.open(
-      `http://localhost:5000/payment-receipt/${paymentId}`,
+      `http://localhost:5001/payment-receipt/${paymentId}`,
       "_blank"
     );
   };

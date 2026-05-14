@@ -1,8 +1,28 @@
 {
-   "type": "module",
    "name": "smart-parking",
    "version": "0.1.0",
    "private": true,
+   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+   "keywords": [],
+   "bugs": {
+      "url": "https://github.com/navreet111/Smart-Parking/issues"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/navreet111/Smart-Parking.git"
+   },
+   "license": "ISC",
+   "author": "",
+   "type": "module",
+   "main": "index.js",
+   "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "dev": "nodemon backend/server.js",
+      "start:backend": "node backend/server.js"
+   },
    "dependencies": {
       "@react-google-maps/api": "^2.20.7",
       "@testing-library/dom": "^10.4.1",
@@ -21,6 +41,7 @@
       "leaflet-defaulticon-compatibility": "^0.1.2",
       "node-cron": "^4.2.1",
       "nodemailer": "^7.0.13",
+      "nodemon": "^3.1.14",
       "pdfkit": "^0.17.2",
       "pg": "^8.16.3",
       "razorpay": "^2.9.6",
@@ -33,12 +54,8 @@
       "react-scripts": "5.0.1",
       "web-vitals": "^2.1.4"
    },
-   "scripts": {
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "dev": "nodemon server.js"
+   "devDependencies": {
+      "concurrently": "^9.2.0"
    },
    "eslintConfig": {
       "extends": [
@@ -57,13 +74,5 @@
          "last 1 firefox version",
          "last 1 safari version"
       ]
-   },
-   "devDependencies": {
-      "concurrently": "^9.2.0"
-   },
-   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-   "main": "index.js",
-   "keywords": [],
-   "author": "",
-   "license": "ISC"
+   }
 }

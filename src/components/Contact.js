@@ -16,7 +16,7 @@ function Contact() {
     try {
       // You would create a new API endpoint in your server.js to handle this form data.
       // For now, this is a placeholder URL.
-      const response = await fetch('http://localhost:5000/contact', {
+      const response = await fetch('http://localhost:5001/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

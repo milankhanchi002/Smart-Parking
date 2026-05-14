@@ -132,21 +132,21 @@ function HomePage({ isLoggedIn, setIsLoggedIn }) {
       )}
 
    
-<section class="parallax how-it-works">
-  <div class="content">
-    <h2 class="title">How Our Smart Parking Works</h2>
-    <p class="subtitle">A simple, fast and reliable way to book parking effortlessly</p>
+<section className="parallax how-it-works">
+  <div className="content">
+    <h2 className="title">How Our Smart Parking Works</h2>
+    <p className="subtitle">A simple, fast and reliable way to book parking effortlessly</p>
 
-    <div class="steps">
-      <div class="step">
+    <div className="steps">
+      <div className="step">
         <img src="/images/search.jpg"/>
         <span>Search Area</span>
       </div>
-      <div class="step">
+      <div className="step">
         <img src="/images/s.jpg" />
         <span>Select Slot</span>
       </div>
-      <div class="step">
+      <div className="step">
         <img src="/images/p.jpg" />
         <span>Pay & Park</span>
       </div>
@@ -155,21 +155,21 @@ function HomePage({ isLoggedIn, setIsLoggedIn }) {
 </section>
 
 
-<section class="parallax reviews">
-  <div class="content">
-    <h2 class="title">What Our Users Say</h2>
+<section className="parallax reviews">
+  <div className="content">
+    <h2 className="title">What Our Users Say</h2>
 
-    <div class="review-box">
+    <div className="review-box">
       <p>"The easiest parking app I’ve ever used. Beautiful UI!"</p>
       <span>- Aakash</span>
     </div>
 
-    <div class="review-box">
+    <div className="review-box">
       <p>"Super smooth booking. The map feature is perfect!"</p>
       <span>- Priya</span>
     </div>
 
-    <div class="review-box">
+    <div className="review-box">
       <p>"Accurate, fast and modern experience. Love it."</p>
       <span>- Rohan</span>
     </div>
