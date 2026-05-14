@@ -22,7 +22,7 @@ export default function PricingPage() {
       const ok = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
       if (!ok) { alert("Failed to load"); setLoading(false); return; }
 
-      const createRes = await fetch("http://localhost:5001/create-parking-payment", {
+      const createRes = await fetch(`\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/create-parking-payment`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: total, city, slotId, hours })
       });
@@ -39,7 +39,7 @@ export default function PricingPage() {
         handler: async function (response) {
           try {
             const token = localStorage.getItem("token");
-            const verifyRes = await fetch("http://localhost:5001/verify-payment", {
+            const verifyRes = await fetch(`\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/verify-payment`, {
               method: "POST", headers: { "Content-Type": "application/json", Authorization: token ? `Bearer ${token}` : "" },
               body: JSON.stringify({ orderId: response.razorpay_order_id,  paymentId: response.razorpay_payment_id, signature: response.razorpay_signature })
             });

@@ -20,7 +20,7 @@ export default function BookingPage() {
   useEffect(() => {
     const fetchSlots = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/slots/${city}`);
+        const res = await fetch(`\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/slots/${city}`);
         const data = await res.json();
 
         console.log("City searched:", city);
