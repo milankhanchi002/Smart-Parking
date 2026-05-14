@@ -23,6 +23,9 @@
       "dev": "nodemon backend/server.js",
       "start:backend": "node backend/server.js"
    },
+   "engines": {
+      "node": "20.x"
+   },
    "dependencies": {
       "@react-google-maps/api": "^2.20.7",
       "@testing-library/dom": "^10.4.1",
