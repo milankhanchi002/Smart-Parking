@@ -1,18 +1,13 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-// Create a professional Nodemailer transport using Resend SMTP
-const emailTransporter = nodemailer.createTransport({
-  host: "smtp.resend.com",
-  port: 465,
-  secure: true, // Use TLS
-  auth: {
-    user: "resend", // Resend SMTP username is always 'resend'
-    pass: process.env.RESEND_API_KEY, 
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendPaymentEmail({
   to,
@@ -40,16 +35,22 @@ Thank you for using QuickPark 🚗
   `;
 
   try {
-    const info = await emailTransporter.sendMail({
-      from: `"QuickPark" <${process.env.EMAIL_FROM || "onboarding@resend.dev"}>`,
-      to,
+    const { data, error } = await resend.emails.send({
+      from: process.env.FROM_EMAIL || "QuickPark <onboarding@resend.dev>",
+      to: [to],
       subject: "Payment Successful - QuickPark",
       text: message,
     });
-    console.log("Email sent successfully: %s", info.messageId);
-    return info;
+
+    if (error) {
+      console.error("Error sending email via Resend API:", error);
+      throw error;
+    }
+
+    console.log("Email sent successfully:", data.id);
+    return data;
   } catch (error) {
-    console.error("Error sending email via Resend:", error);
+    console.error("Error sending email via Resend API:", error);
     throw error;
   }
 }

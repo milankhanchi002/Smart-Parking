@@ -1,81 +1,35 @@
 {
-   "name": "smart-parking",
-   "version": "0.1.0",
-   "private": true,
-   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-   "keywords": [],
-   "bugs": {
-      "url": "https://github.com/navreet111/Smart-Parking/issues"
-   },
-   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/navreet111/Smart-Parking.git"
-   },
-   "license": "ISC",
-   "author": "",
-   "type": "module",
-   "main": "index.js",
-   "scripts": {
-      "start": "react-scripts start",
-      "build": "CI=false react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "dev": "nodemon backend/server.js",
-      "start:backend": "node backend/server.js"
-   },
-   "engines": {
-      "node": "20.x"
-   },
-   "dependencies": {
-      "@react-google-maps/api": "^2.20.7",
-      "@testing-library/dom": "^10.4.1",
-      "@testing-library/jest-dom": "^6.6.4",
-      "@testing-library/react": "^16.3.0",
-      "@testing-library/user-event": "^13.5.0",
-      "axios": "^1.11.0",
-      "bcrypt": "^6.0.0",
-      "bcryptjs": "^3.0.2",
-      "body-parser": "^2.2.0",
-      "cors": "^2.8.5",
-      "dotenv": "^17.2.3",
-      "express": "^5.1.0",
-      "jsonwebtoken": "^9.0.2",
-      "leaflet": "^1.9.4",
-      "leaflet-defaulticon-compatibility": "^0.1.2",
-      "node-cron": "^4.2.1",
-      "nodemailer": "^7.0.13",
-      "nodemon": "^3.1.14",
-      "pdfkit": "^0.17.2",
-      "pg": "^8.16.3",
-      "razorpay": "^2.9.6",
-      "react": "^19.1.1",
-      "react-datepicker": "^8.4.0",
-      "react-dom": "^19.1.1",
-      "react-icons": "^5.5.0",
-      "react-leaflet": "^5.0.0",
-      "react-router-dom": "^7.8.0",
-      "react-scripts": "5.0.1",
-      "web-vitals": "^2.1.4"
-   },
-   "devDependencies": {
-      "concurrently": "^9.2.0"
-   },
-   "eslintConfig": {
-      "extends": [
-         "react-app",
-         "react-app/jest"
-      ]
-   },
-   "browserslist": {
-      "production": [
-         ">0.2%",
-         "not dead",
-         "not op_mini all"
-      ],
-      "development": [
-         "last 1 chrome version",
-         "last 1 firefox version",
-         "last 1 safari version"
-      ]
-   }
+  "name": "smart-parking-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Smart-Parking application backend and orchestration",
+  "type": "module",
+  "scripts": {
+    "start:backend": "node backend/server.js",
+    "dev:backend": "nodemon backend/server.js",
+    "start:frontend": "npm run start --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run start:frontend\""
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.2.1",
+    "nodemon": "^3.1.14",
+    "pdfkit": "^0.17.2",
+    "pg": "^8.16.3",
+    "razorpay": "^2.9.6",
+    "resend": "^6.12.3"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
 }

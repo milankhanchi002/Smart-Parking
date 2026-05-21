@@ -1,6 +1,10 @@
-
 import dotenv from "dotenv";
-dotenv.config();
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 import express from "express";
 import bodyParser from "body-parser";
@@ -54,6 +58,10 @@ const razorpay = new Razorpay({
 // ---------- DB init ----------
 async function initDB() {
   try {
+    const client = await pool.connect();
+    console.log("Database connection successful");
+    client.release();
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -105,17 +113,17 @@ async function initDB() {
     `);
     const dummySlotsQuery = `
       INSERT INTO slots (slot_number, area, is_booked, booked_by, booked_by_username) VALUES
-      (1, 'Delhi', false, null, null), (2, 'Delhi', true, 1, 'user1'), (3, 'Delhi', false, null, null), (4, 'Delhi', true, 1, 'user1'), (5, 'Delhi', false, null, null),
-      (6, 'Delhi', false, null, null), (7, 'Delhi', true, 1, 'user1'), (8, 'Delhi', false, null, null), (9, 'Delhi', true, 1, 'user1'), (10, 'Delhi', false, null, null),
+      (1, 'Delhi', false, null, null), (2, 'Delhi', false, null, null), (3, 'Delhi', false, null, null), (4, 'Delhi', false, null, null), (5, 'Delhi', false, null, null),
+      (6, 'Delhi', false, null, null), (7, 'Delhi', false, null, null), (8, 'Delhi', false, null, null), (9, 'Delhi', false, null, null), (10, 'Delhi', false, null, null),
 
-      (1, 'Mumbai', true, 1, 'user1'), (2, 'Mumbai', false, null, null), (3, 'Mumbai', false, null, null), (4, 'Mumbai', false, null, null), (5, 'Mumbai', true, 1, 'user1'),
-      (6, 'Mumbai', false, null, null), (7, 'Mumbai', false, null, null), (8, 'Mumbai', true, 1, 'user1'), (9, 'Mumbai', false, null, null), (10, 'Mumbai', false, null, null),
+      (1, 'Mumbai', false, null, null), (2, 'Mumbai', false, null, null), (3, 'Mumbai', false, null, null), (4, 'Mumbai', false, null, null), (5, 'Mumbai', false, null, null),
+      (6, 'Mumbai', false, null, null), (7, 'Mumbai', false, null, null), (8, 'Mumbai', false, null, null), (9, 'Mumbai', false, null, null), (10, 'Mumbai', false, null, null),
 
-      (1, 'Bengaluru', false, null, null), (2, 'Bengaluru', true, 1, 'user1'), (3, 'Bengaluru', false, null, null), (4, 'Bengaluru', true, 1, 'user1'), (5, 'Bengaluru', false, null, null),
-      (6, 'Bengaluru', false, null, null), (7, 'Bengaluru', true, 1, 'user1'), (8, 'Bengaluru', false, null, null), (9, 'Bengaluru', true, 1, 'user1'), (10, 'Bengaluru', false, null, null),
+      (1, 'Bengaluru', false, null, null), (2, 'Bengaluru', false, null, null), (3, 'Bengaluru', false, null, null), (4, 'Bengaluru', false, null, null), (5, 'Bengaluru', false, null, null),
+      (6, 'Bengaluru', false, null, null), (7, 'Bengaluru', false, null, null), (8, 'Bengaluru', false, null, null), (9, 'Bengaluru', false, null, null), (10, 'Bengaluru', false, null, null),
 
-      (1, 'Chandigarh', true, 1, 'user1'), (2, 'Chandigarh', false, null, null), (3, 'Chandigarh', true, 1, 'user1'), (4, 'Chandigarh', false, null, null), (5, 'Chandigarh', false, null, null),
-      (6, 'Chandigarh', true, 1, 'user1'), (7, 'Chandigarh', false, null, null), (8, 'Chandigarh', true, 1, 'user1'), (9, 'Chandigarh', false, null, null), (10, 'Chandigarh', false, null, null)
+      (1, 'Chandigarh', false, null, null), (2, 'Chandigarh', false, null, null), (3, 'Chandigarh', false, null, null), (4, 'Chandigarh', false, null, null), (5, 'Chandigarh', false, null, null),
+      (6, 'Chandigarh', false, null, null), (7, 'Chandigarh', false, null, null), (8, 'Chandigarh', false, null, null), (9, 'Chandigarh', false, null, null), (10, 'Chandigarh', false, null, null)
       ON CONFLICT (slot_number, area) DO NOTHING;
     `;
     await pool.query(dummySlotsQuery);
