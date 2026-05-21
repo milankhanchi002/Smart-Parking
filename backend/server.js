@@ -22,11 +22,25 @@ const { Pool } = pkg;
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://smart-parking-livid-eta.vercel.app",
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "*",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
+
+app.options(/(.*)/, cors());
 app.use(bodyParser.json());
 
 const poolConfig = process.env.DATABASE_URL
