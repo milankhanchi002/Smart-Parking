@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 export default function AdminPayments() {
   const [payments, setPayments] = useState([]);
   useEffect(() => {
-    fetch(`\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/admin/payments`)
+    fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5001"}/admin/payments`)
       .then((r) => r.json())
       .then(setPayments)
       .catch(console.error);

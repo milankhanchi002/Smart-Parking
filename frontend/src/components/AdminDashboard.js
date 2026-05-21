@@ -31,7 +31,7 @@ const AdminDashboard = () => {
     }
 
     // ✅ Fetch all payments
-    fetch(`\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/admin/payments`, {
+    fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5001"}/admin/payments`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
     }
 
     window.open(
-      `\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/payment-receipt/${paymentId}`,
+      `${process.env.REACT_APP_API_URL || "http://localhost:5001"}/payment-receipt/${paymentId}`,
       "_blank"
     );
   };
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
   try {
 
     const res = await fetch(
-      `\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/admin/unbook-slot/${slotId}`,
+      `${process.env.REACT_APP_API_URL || "http://localhost:5001"}/admin/unbook-slot/${slotId}`,
       {
         method: "PUT",
       }

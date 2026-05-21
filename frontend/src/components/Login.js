@@ -11,7 +11,7 @@ const [role, setRole] = useState("USER");
     e.preventDefault();
 
     try {
-     const res = await fetch(`\${process.env.REACT_APP_API_URL || "http://localhost:5001"}/login`, {
+     const res = await fetch(`${process.env.REACT_APP_API_URL || "http://localhost:5001"}/login`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ username, password }),

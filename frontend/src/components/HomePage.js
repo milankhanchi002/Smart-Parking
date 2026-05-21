@@ -19,7 +19,7 @@ function HomePage({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate();
 
   const mainCities = [
-    "Delhi", "Mumbai", "Bengaluru", "Chennai", "Kolkata", "Hyderabad", "Pune", "Ahmedabad", "Chandigarh",
+    "Delhi", "Mumbai", "Bengaluru", "Chandigarh",
   ];
 
   const handleFindClick = () => {
