@@ -102,91 +102,93 @@ const AdminDashboard = () => {
         ) : payments.length === 0 ? (
           <p className="loading-text">No bookings found</p>
         ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>User</th>
-                <th>Email</th>
-                <th>City</th>
-                <th>Slot</th>
-                <th>Hours</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Receipt</th> {/* ✅ NEW */}
-              <th>Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {payments.map((p) => (
-                <tr key={p.id}>
-                  <td>{p.user_name || "-"}</td>
-                  <td>{p.email || "-"}</td>
-                  <td>{p.city || "-"}</td>
-                  <td>{p.slot_number || "-"}</td>
-                  <td>{p.hours || "-"}</td>
-                  <td>₹{p.amount}</td>
-
-                  <td>
-                    <span
-                      className={`status ${
-                        p.status === "PAID"
-                          ? "paid"
-                          : p.status === "FAILED"
-                          ? "failed"
-                          : "pending"
-                      }`}
-                    >
-                      {p.status}
-                    </span>
-                  </td>
-
-                  <td>{new Date(p.created_at).toLocaleString()}</td>
-
-                  {/*  PRINT / DOWNLOAD RECEIPT */}
-                  <td>
-                    {p.status === "PAID" && p.payment_id ? (
-                      <button
-                        onClick={() => openReceipt(p.payment_id)}
-                        style={{
-                          padding: "6px 10px",
-                          background: "#1E90FF",
-                          color: "#fff",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                        }}
-                      >
-                      Print / Download
-                      </button>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td>
-  {p.status === "PAID" ? (
-    <button
-      onClick={() => unbookSlot(p.slot_id)}
-      style={{
-        padding: "6px 10px",
-        background: "red",
-        color: "#fff",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
-    >
-      Free Slot
-    </button>
-  ) : (
-    "-"
-  )}
-</td>
+          <div className="table-container">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>City</th>
+                  <th>Slot</th>
+                  <th>Hours</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Receipt</th> {/* ✅ NEW */}
+                <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {payments.map((p) => (
+                  <tr key={p.id}>
+                    <td>{p.user_name || "-"}</td>
+                    <td>{p.email || "-"}</td>
+                    <td>{p.city || "-"}</td>
+                    <td>{p.slot_number || "-"}</td>
+                    <td>{p.hours || "-"}</td>
+                    <td>₹{p.amount}</td>
+
+                    <td>
+                      <span
+                        className={`status ${
+                          p.status === "PAID"
+                            ? "paid"
+                            : p.status === "FAILED"
+                            ? "failed"
+                            : "pending"
+                        }`}
+                      >
+                        {p.status}
+                      </span>
+                    </td>
+
+                    <td>{new Date(p.created_at).toLocaleString()}</td>
+
+                    {/*  PRINT / DOWNLOAD RECEIPT */}
+                    <td>
+                      {p.status === "PAID" && p.payment_id ? (
+                        <button
+                          onClick={() => openReceipt(p.payment_id)}
+                          style={{
+                            padding: "6px 10px",
+                            background: "#1E90FF",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                        Print / Download
+                        </button>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td>
+    {p.status === "PAID" ? (
+      <button
+        onClick={() => unbookSlot(p.slot_id)}
+        style={{
+          padding: "6px 10px",
+          background: "red",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Free Slot
+      </button>
+    ) : (
+      "-"
+    )}
+  </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

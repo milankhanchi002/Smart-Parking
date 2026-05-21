@@ -648,7 +648,14 @@ body {
   border-bottom: 1px solid #334155;
 }
 
-/* Responsive Design for Mobile Devices */
+/* Responsive Table Container */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive Design for Mobile and Tablets */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -656,56 +663,157 @@ body {
     padding: 1rem;
     box-sizing: border-box;
     width: 100%;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.85);
   }
+  
   .navbar nav {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin: 10px 0;
+    gap: 12px;
+    margin: 15px 0;
   }
+  
   .navbar nav a {
-    margin: 0 5px;
+    margin: 0 8px;
     font-size: 16px;
   }
+  
   .navbar-logo {
     font-size: 2rem;
   }
-  .main-content {
-    padding: 1.5rem;
-    margin: 1rem;
-  }
-  .main-content h2 {
-    font-size: 2rem;
-  }
-  .search-bar {
-    flex-direction: column;
-  }
-  .search-bar input, .react-datepicker-wrapper input, .btn-success {
-    width: 100%;
+  
+  .main {
+    height: auto;
+    min-height: 500px;
+    padding: 100px 20px 60px;
     box-sizing: border-box;
   }
-  .react-datepicker-wrapper {
+  
+  .main-content {
+    padding: 1.5rem;
+    margin: 10px;
     width: 100%;
+    max-width: 480px;
+    box-sizing: border-box;
   }
-  .title {
-    font-size: 32px;
+  
+  .main-content h2 {
+    font-size: 1.8rem;
   }
-  .subtitle {
-    font-size: 16px;
+  
+  .main-content p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
-  .review-box {
-    margin: 15px;
+  
+  .search-bar {
+    flex-direction: column;
+    gap: 10px;
     padding: 15px;
   }
+  
+  .search-bar input, 
+  .react-datepicker-wrapper,
+  .react-datepicker-wrapper input, 
+  .btn-success {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 15px;
+    margin-bottom: 25px;
+  }
+  
+  .steps {
+    gap: 20px;
+  }
+  
+  .step {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .review-box {
+    margin: 15px 10px;
+    padding: 20px;
+    font-size: 16px;
+  }
+  
   .admin-container {
     padding: 15px;
   }
+  
   .admin-card {
-    overflow-x: auto;
+    padding: 15px;
   }
+  
+  .login-container {
+    height: auto;
+    min-height: 100vh;
+    padding: 40px 10px;
+    box-sizing: border-box;
+  }
+  
   .login-box {
     padding: 30px 20px;
-    margin: 15px;
+    width: 90%;
+    max-width: 420px;
+    margin: auto;
+    box-sizing: border-box;
+  }
+  
+  .login-box h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+  
+  .section {
+    padding: 3rem 1rem;
+  }
+  
+  .section h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
 }
+
+/* Mobile specific overrides (320px–480px) */
+@media (max-width: 480px) {
+  .navbar nav {
+    gap: 8px;
+  }
+  
+  .navbar nav a {
+    font-size: 14px;
+    margin: 0 4px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  .footer {
+    padding: 1rem;
+    font-size: 14px;
+  }
+}
+
+/* Tablet specific overrides (481px–768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
