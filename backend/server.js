@@ -198,7 +198,7 @@ app.post("/login", async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      "secretkey",
+      process.env.JWT_SECRET || "secretkey",
       { expiresIn: "12h" }
     );
 
@@ -234,6 +234,27 @@ app.get("/slots/:area", async (req, res) => {
     return res.status(500).json({ error: "server error" });
   }
 });
+
+app.get("/test-email", async (req, res) => {
+  try {
+    const result = await sendPaymentEmail({
+      to: req.query.to || "MY_TEST_EMAIL_HERE",
+      username: "Test User",
+      city: "Delhi",
+      slotNumber: 1,
+      hours: 1,
+      amount: 50,
+      orderId: "test_order",
+      paymentId: "test_payment"
+    });
+
+    res.json({ success: true, result });
+  } catch (err) {
+    console.error("Test email failed:", err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.get("/payment-receipt/:paymentId", async (req, res) => {
   try {
     const { paymentId } = req.params;
@@ -343,7 +364,7 @@ console.log(signature);
     //  Decode logged-in user
     let userId = null, username = null, email = null;
     if (token) {
-      const decoded = jwt.verify(token, "secretkey");
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "secretkey");
       userId = decoded.id;
       username = decoded.username;
       email = decoded.email;
@@ -391,6 +412,10 @@ console.log("PAYMENT:", paymentId);
 console.log("SIGNATURE:", signature);
 console.log("GENERATED:", generatedSignature);
    
+    console.log("Decoded user email:", email);
+    console.log("Decoded username:", username);
+    console.log("Payment row:", paymentRow);
+
 if (email) {
   try {
     console.log("📧 Sending email to:", email);
